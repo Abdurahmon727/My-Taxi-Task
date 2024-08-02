@@ -70,4 +70,9 @@ dependencies {
     implementation(libs.play.services.location)
     implementation(libs.coroutines.play.services)
 
+    // map
+    implementation(libs.mapbox.android)
+    implementation(libs.mapbox.compose)
+
+
 }
