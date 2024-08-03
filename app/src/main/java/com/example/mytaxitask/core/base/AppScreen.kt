@@ -1,4 +1,4 @@
-package com.example.mytaxitask.core
+package com.example.mytaxitask.core.base
 
 import androidx.compose.runtime.Composable
 
