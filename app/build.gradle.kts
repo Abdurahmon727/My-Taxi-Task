@@ -88,7 +88,5 @@ dependencies {
 
     // map
     implementation(libs.mapbox.android)
-    implementation(libs.mapbox.compose)
-
 
 }
