@@ -24,6 +24,18 @@ val Typography = Typography(
         letterSpacing = 0.5.sp
     ),
 
+    bodyMedium = TextStyle(
+        fontFamily = latoFont,
+        fontWeight = FontWeight.W400,
+        fontSize = 18.sp,
+    ),
+
+    headlineMedium = TextStyle(
+        fontFamily = latoFont,
+        fontWeight = FontWeight.W700,
+        fontSize = 18.sp,
+    ),
+
     titleLarge = TextStyle(
         fontFamily = latoFont,
         fontWeight = FontWeight.Normal,
@@ -31,6 +43,7 @@ val Typography = Typography(
         lineHeight = 28.sp,
         letterSpacing = 0.sp
     ),
+
     labelSmall = TextStyle(
         fontFamily = latoFont,
         fontWeight = FontWeight.Medium,
