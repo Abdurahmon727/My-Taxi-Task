@@ -1,6 +1,8 @@
 package com.example.mytaxitask.ui.home
 
 import androidx.lifecycle.ViewModel
+import com.mapbox.geojson.Point
+import com.mapbox.maps.MapView
 
 
 class HomeViewModel : ViewModel() {
@@ -8,7 +10,13 @@ class HomeViewModel : ViewModel() {
 }
 
 data class HomeUiState(
-    val status: MapStatus,
+    val mapView: MapView?,
+    val currentPoint: Point?,
 )
 
-enum class MapStatus{initial}
+sealed class HomeIntent {
+    data object GetLocation : HomeIntent()
+
+
+}
+
