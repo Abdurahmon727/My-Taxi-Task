@@ -1,4 +1,4 @@
-package com.example.mytaxitask.ui.theme
+package com.example.mytaxitask.presentation.theme
 
 import android.app.Activity
 import android.os.Build

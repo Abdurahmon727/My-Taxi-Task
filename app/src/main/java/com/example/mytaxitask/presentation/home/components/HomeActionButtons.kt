@@ -1,4 +1,4 @@
-package com.example.mytaxitask.ui.home.components
+package com.example.mytaxitask.presentation.home.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column

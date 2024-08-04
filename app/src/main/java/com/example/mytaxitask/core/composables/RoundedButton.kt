@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.mytaxitask.core.extensions.advancedShadow
 import com.example.mytaxitask.core.extensions.ifElse
-import com.example.mytaxitask.ui.theme.shadowColor
+import com.example.mytaxitask.presentation.theme.shadowColor
 
 
 @Composable

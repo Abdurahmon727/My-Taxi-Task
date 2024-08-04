@@ -7,9 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.example.mytaxitask.ui.home.HomePage
-import com.example.mytaxitask.ui.home.HomeViewModel
-import com.example.mytaxitask.ui.theme.MyTaxiTaskTheme
+import com.example.mytaxitask.presentation.home.HomePage
+import com.example.mytaxitask.presentation.home.HomePageViewModel
+import com.example.mytaxitask.presentation.theme.MyTaxiTaskTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    HomePage(viewModel = HomeViewModel()).Content()
+                    HomePage(viewModel = HomePageViewModel()).Content()
                 }
             }
         }

@@ -1,4 +1,4 @@
-package com.example.mytaxitask.ui.home
+package com.example.mytaxitask.presentation.home
 
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -9,27 +9,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import com.example.mytaxitask.core.base.AppScreen
-import com.example.mytaxitask.ui.home.components.HomeActionButtons
-import com.example.mytaxitask.ui.home.components.HomeMapView
-import com.example.mytaxitask.ui.home.components.HomeTopBar
+import com.example.mytaxitask.presentation.home.components.HomeActionButtons
+import com.example.mytaxitask.presentation.home.components.HomeMapView
+import com.example.mytaxitask.presentation.home.components.HomeTopBar
 
 
-
-class HomePage(val viewModel: HomeViewModel) : AppScreen {
+class HomePage(val viewModel: HomePageViewModel) : AppScreen {
     @Composable
     override fun Content() {
         val intent = viewModel::onIntentDispatched
 
-        val permissionRequest =
-            rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions(),
-                onResult = { permissions ->
-                    Log.i("LOCATION PERMISSION RESULT","$permissions")
-                    if (!permissions.values.all { it }) {
-                        //handle permission denied
-                    } else {
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions(),
+            onResult = { permissions ->
+                Log.i("LOCATION PERMISSION RESULT", "$permissions")
+                if (!permissions.values.all { it }) {
+                    //handle permission denied
+                } else {
 //                        relaunch = true
-                    }
-                })
+                }
+            })
 
         val state = viewModel.state.collectAsState().value
 
@@ -43,7 +41,7 @@ class HomePage(val viewModel: HomeViewModel) : AppScreen {
 
             HomeTopBar(isDriverActive = state.isDriverActive,
                 onChangeStatus = {
-                    intent.invoke(HomeIntent.ToggleDriverStatus)
+                    intent.invoke(HomePageIntent.ToggleDriverStatus)
                 })
 
             HomeActionButtons(showMe = {

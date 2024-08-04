@@ -1,4 +1,4 @@
-package com.example.mytaxitask.ui.home.components
+package com.example.mytaxitask.presentation.home.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing

@@ -1,4 +1,4 @@
-package com.example.mytaxitask.ui.home.components
+package com.example.mytaxitask.presentation.home.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -22,8 +22,8 @@ import com.example.mytaxitask.core.composables.RoundedButton
 import com.example.mytaxitask.core.constants.AppConstants
 import com.example.mytaxitask.core.extensions.Width
 import com.example.mytaxitask.core.extensions.advancedShadow
-import com.example.mytaxitask.ui.theme.green
-import com.example.mytaxitask.ui.theme.shadowColor
+import com.example.mytaxitask.presentation.theme.green
+import com.example.mytaxitask.presentation.theme.shadowColor
 
 
 @Composable
