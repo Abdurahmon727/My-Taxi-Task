@@ -89,4 +89,7 @@ dependencies {
     // map
     implementation(libs.mapbox.android)
 
+    // advanced bottom sheet
+    implementation(libs.advanced.bottom.sheet)
+
 }
