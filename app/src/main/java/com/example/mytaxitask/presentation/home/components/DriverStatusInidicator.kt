@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.example.mytaxitask.data.models.DriverStatus
+import com.example.mytaxitask.domain.model.DriverStatus
 
 
 @Composable

@@ -1,7 +1,7 @@
 package com.example.mytaxitask.core.constants
 
 import com.example.mytaxitask.R
-import com.example.mytaxitask.data.models.DriverStatus
+import com.example.mytaxitask.domain.model.DriverStatus
 import com.example.mytaxitask.presentation.theme.green
 import com.example.mytaxitask.presentation.theme.red
 

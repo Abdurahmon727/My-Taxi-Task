@@ -1,4 +1,4 @@
-package com.example.mytaxitask.data.models
+package com.example.mytaxitask.domain.model
 
 import androidx.compose.ui.graphics.Color
 
