@@ -8,7 +8,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.graphics.drawable.toBitmap
 import com.example.mytaxitask.R
 import com.example.mytaxitask.core.constants.AppConstants
-import com.example.mytaxitask.presentation.home.HomeIntent
 import com.example.mytaxitask.presentation.home.HomePageIntent
 import com.mapbox.maps.MapView
 import com.mapbox.maps.plugin.attribution.attribution
@@ -18,7 +17,7 @@ import com.mapbox.maps.plugin.scalebar.scalebar
 @Composable
 fun HomeMapView(
     modifier: Modifier = Modifier,
-    intent: (HomeIntent) -> Unit,
+    intent: (HomePageIntent) -> Unit,
 ) {
     val context = LocalContext.current
     val marker = remember(context) {
