@@ -19,6 +19,14 @@ class HomePageViewModel : ViewModel() {
             is HomePageIntent.ToggleDriverStatus -> {
                 state.update { it.copy(isDriverActive = !state.value.isDriverActive) }
             }
+
+            is HomePageIntent.MapZoomIn -> {
+
+            }
+
+            is HomePageIntent.MapZoomOut -> {
+
+            }
         }
     }
 
@@ -31,6 +39,5 @@ class HomePageViewModel : ViewModel() {
 
         }
     }
-
 }
 
