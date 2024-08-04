@@ -21,18 +21,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.example.mytaxitask.ui.theme.green
-import com.example.mytaxitask.ui.theme.red
+import com.example.mytaxitask.ui.home.DriverStatus
 
 
 @Composable
-fun DriverStatusIndicator(modifier: Modifier = Modifier, tabIndex: Int) {
+fun DriverStatusIndicator(modifier: Modifier = Modifier, tabIndex: Int, tabs: List<DriverStatus>) {
+
     val animatedColor =
         animateColorAsState(
-            targetValue = if (tabIndex == 0) red else green,
+            targetValue = tabs[tabIndex].color,
             label = "",
             animationSpec =
-            tween(1000, easing = FastOutSlowInEasing)
+            tween(500, easing = FastOutSlowInEasing)
         )
     Column(
         modifier

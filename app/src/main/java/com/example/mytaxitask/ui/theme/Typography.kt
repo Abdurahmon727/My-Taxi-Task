@@ -25,12 +25,14 @@ val Typography = Typography(
     ),
 
     bodyMedium = TextStyle(
+        color = black,
         fontFamily = latoFont,
         fontWeight = FontWeight.W400,
         fontSize = 18.sp,
     ),
 
     headlineMedium = TextStyle(
+        color = black,
         fontFamily = latoFont,
         fontWeight = FontWeight.W700,
         fontSize = 18.sp,

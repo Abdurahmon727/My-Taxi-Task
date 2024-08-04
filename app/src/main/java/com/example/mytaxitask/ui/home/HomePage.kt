@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Tab
 import androidx.compose.material3.TabPosition
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -25,27 +24,34 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import com.example.mytaxitask.R
 import com.example.mytaxitask.core.base.AppScreen
 import com.example.mytaxitask.core.composables.RoundedButton
 import com.example.mytaxitask.core.extensions.Width
 import com.example.mytaxitask.core.extensions.advancedShadow
 import com.example.mytaxitask.ui.home.components.DriverStatusIndicator
+import com.example.mytaxitask.ui.home.components.DriverStatusTab
 import com.example.mytaxitask.ui.home.components.MapView
 import com.example.mytaxitask.ui.home.components.myTabIndicatorOffset
+import com.example.mytaxitask.ui.theme.green
+import com.example.mytaxitask.ui.theme.red
 import com.example.mytaxitask.ui.theme.shadowColor
 import com.mapbox.geojson.Point
 
+data class DriverStatus(val statusTitle: Int, val color: Color)
 
 class HomePage : AppScreen {
     @Composable
     override fun Content() {
+
+        val driverStatuses = listOf(
+            DriverStatus(R.string.busy, red),
+            DriverStatus(R.string.active, green)
+        )
 
 
         var point: Point? by remember {
@@ -55,15 +61,13 @@ class HomePage : AppScreen {
             mutableStateOf(false)
         }
         val context = LocalContext.current
-        var tabIndex by remember { mutableIntStateOf(0) }
+        val selectedTabIndex = remember { mutableIntStateOf(0) }
 
         val indicator = @Composable { tabPositions: List<TabPosition> ->
-//            TabRowDefaults.Indicator(
-//                Modifier.tabIndicatorOffset(tabPositions[tabIndex])
-//            )
             DriverStatusIndicator(
-                Modifier.myTabIndicatorOffset(tabPositions[tabIndex]),
-                tabIndex = tabIndex
+                Modifier.myTabIndicatorOffset(tabPositions[selectedTabIndex.intValue]),
+                tabIndex = selectedTabIndex.intValue,
+                tabs = driverStatuses,
             )
         }
 
@@ -73,7 +77,7 @@ class HomePage : AppScreen {
                     if (!permissions.values.all { it }) {
                         //handle permission denied
                     } else {
-                        relaunch = !relaunch
+                        relaunch = true
                     }
                 })
 
@@ -85,7 +89,9 @@ class HomePage : AppScreen {
             )
 
             Row(modifier = Modifier.padding(16.dp)) {
-                RoundedButton(onClick = {
+                RoundedButton(
+                   fillColor = MaterialTheme.colorScheme.background,
+                    onClick = {
                     //todo
                 }) {
                     Icon(
@@ -94,7 +100,6 @@ class HomePage : AppScreen {
                     )
                 }
                 12.Width()
-
                 Box(
                     modifier = Modifier
                         .weight(1f)
@@ -110,61 +115,22 @@ class HomePage : AppScreen {
                 ) {
                     TabRow(
                         modifier = Modifier.fillMaxSize(),
-                        selectedTabIndex = tabIndex, indicator = indicator,
+                        selectedTabIndex = selectedTabIndex.intValue,
+                        indicator = indicator,
                         divider = {},
                     ) {
-
-                        Tab(
-                            text = {
-                            Text(
-                                text = stringResource(id = R.string.busy),
-                                style = MaterialTheme.typography.headlineMedium,
-                                textAlign = TextAlign.Center
+                        driverStatuses.onEachIndexed { index, tab ->
+                            DriverStatusTab(
+                                index = index,
+                                tab = tab,
+                                selectedTabIndex = selectedTabIndex
                             )
-                        },
-                            selected = tabIndex == 0,
-                            onClick = { tabIndex = 0 }
-                        )
-
-                        Tab(
-                            text = {
-                                Text(
-                                    text = stringResource(id = R.string.active),
-                                    style = MaterialTheme.typography.headlineMedium,
-                                    textAlign = TextAlign.Center
-                                )
-                            },
-                            selected = tabIndex == 1,
-                            onClick = { tabIndex = 1 }
-                        )
-
-
+                        }
                     }
-
-//                    Row(
-//                        modifier = Modifier.padding(4.dp).fillMaxSize(),
-//                        horizontalArrangement = Arrangement.Center,
-//                        verticalAlignment = Alignment.CenterVertically,
-//                    ) {
-//                        Text(
-//                            modifier = Modifier.weight(1f),
-//                            text = stringResource(id = R.string.busy),
-//                            textAlign = TextAlign.Center
-//                        )
-//                        Text(
-//                            modifier = Modifier.weight(1f),
-//                            text = stringResource(id = R.string.active),
-//                            textAlign = TextAlign.Center
-//                        )
-//                    }
                 }
-
-
                 12.Width()
-
-
                 RoundedButton(
-                    fillColor = MaterialTheme.colorScheme.secondary
+                    fillColor = green
                 ) {
                     Text(
                         text = "95", style = MaterialTheme.typography.headlineMedium,
@@ -175,7 +141,6 @@ class HomePage : AppScreen {
 
         LaunchedEffect(key1 = relaunch) {
             try {
-
                 val location = LocationService().getCurrentLocation(context)
                 point = Point.fromLngLat(location.longitude, location.latitude)
 
