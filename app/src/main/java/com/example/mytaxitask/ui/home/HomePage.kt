@@ -12,10 +12,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabPosition
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -23,28 +27,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.compose.ui.viewinterop.NoOpUpdate
-import androidx.core.graphics.drawable.toBitmap
+import androidx.compose.ui.zIndex
 import com.example.mytaxitask.R
 import com.example.mytaxitask.core.base.AppScreen
 import com.example.mytaxitask.core.composables.RoundedButton
-import com.example.mytaxitask.core.constants.AppConstants
 import com.example.mytaxitask.core.extensions.Width
 import com.example.mytaxitask.core.extensions.advancedShadow
+import com.example.mytaxitask.ui.home.components.DriverStatusIndicator
+import com.example.mytaxitask.ui.home.components.MapView
+import com.example.mytaxitask.ui.home.components.myTabIndicatorOffset
 import com.example.mytaxitask.ui.theme.shadowColor
 import com.mapbox.geojson.Point
-import com.mapbox.maps.CameraOptions
-import com.mapbox.maps.MapView
-import com.mapbox.maps.plugin.animation.flyTo
-import com.mapbox.maps.plugin.annotation.annotations
-import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
-import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
-import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
-import com.mapbox.maps.plugin.attribution.attribution
-import com.mapbox.maps.plugin.logo.logo
-import com.mapbox.maps.plugin.scalebar.scalebar
 
 
 class HomePage : AppScreen {
@@ -59,6 +55,17 @@ class HomePage : AppScreen {
             mutableStateOf(false)
         }
         val context = LocalContext.current
+        var tabIndex by remember { mutableIntStateOf(0) }
+
+        val indicator = @Composable { tabPositions: List<TabPosition> ->
+//            TabRowDefaults.Indicator(
+//                Modifier.tabIndicatorOffset(tabPositions[tabIndex])
+//            )
+            DriverStatusIndicator(
+                Modifier.myTabIndicatorOffset(tabPositions[tabIndex]),
+                tabIndex = tabIndex
+            )
+        }
 
         val permissionRequest =
             rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions(),
@@ -73,8 +80,6 @@ class HomePage : AppScreen {
         Box(
             modifier = Modifier.fillMaxSize(),
         ) {
-
-//
             MapView(
                 point = point, modifier = Modifier.fillMaxSize()
             )
@@ -94,9 +99,6 @@ class HomePage : AppScreen {
                     modifier = Modifier
                         .weight(1f)
                         .height(56.dp)
-//                            .shadow(elevation = 5.dp,
-//                                shape = RoundedCornerShape(14.dp)
-//                            )
                         .advancedShadow(
                             color = shadowColor,
                             offsetX = 0.dp,
@@ -106,7 +108,55 @@ class HomePage : AppScreen {
                         .clip(RoundedCornerShape(14.dp))
                         .background(MaterialTheme.colorScheme.background)
                 ) {
+                    TabRow(
+                        modifier = Modifier.fillMaxSize(),
+                        selectedTabIndex = tabIndex, indicator = indicator,
+                        divider = {},
+                    ) {
 
+                        Tab(
+                            text = {
+                            Text(
+                                text = stringResource(id = R.string.busy),
+                                style = MaterialTheme.typography.headlineMedium,
+                                textAlign = TextAlign.Center
+                            )
+                        },
+                            selected = tabIndex == 0,
+                            onClick = { tabIndex = 0 }
+                        )
+
+                        Tab(
+                            text = {
+                                Text(
+                                    text = stringResource(id = R.string.active),
+                                    style = MaterialTheme.typography.headlineMedium,
+                                    textAlign = TextAlign.Center
+                                )
+                            },
+                            selected = tabIndex == 1,
+                            onClick = { tabIndex = 1 }
+                        )
+
+
+                    }
+
+//                    Row(
+//                        modifier = Modifier.padding(4.dp).fillMaxSize(),
+//                        horizontalArrangement = Arrangement.Center,
+//                        verticalAlignment = Alignment.CenterVertically,
+//                    ) {
+//                        Text(
+//                            modifier = Modifier.weight(1f),
+//                            text = stringResource(id = R.string.busy),
+//                            textAlign = TextAlign.Center
+//                        )
+//                        Text(
+//                            modifier = Modifier.weight(1f),
+//                            text = stringResource(id = R.string.active),
+//                            textAlign = TextAlign.Center
+//                        )
+//                    }
                 }
 
 
@@ -158,45 +208,5 @@ class HomePage : AppScreen {
         }
     }
 
-    @Composable
-    fun MapView(
-        modifier: Modifier = Modifier,
-        point: Point?,
-    ) {
-        val context = LocalContext.current
-        val marker = remember(context) {
-            context.getDrawable(R.drawable.ic_car)!!.toBitmap()
-        }
-        var pointAnnotationManager: PointAnnotationManager? by remember {
-            mutableStateOf(null)
-        }
-        AndroidView(factory = {
-            MapView(it).also { mapView ->
-                mapView.mapboxMap.loadStyleUri(AppConstants.MAPURL)
 
-                mapView.scalebar.enabled = false
-                mapView.logo.updateSettings { enabled = false }
-                mapView.attribution.updateSettings {
-                    enabled = false
-                }
-                val annotationApi = mapView.annotations
-                pointAnnotationManager = annotationApi.createPointAnnotationManager()
-            }
-        }, update = { mapView ->
-            if (point != null) {
-                pointAnnotationManager?.let {
-                    it.deleteAll()
-                    val pointAnnotationOptions =
-                        PointAnnotationOptions().withPoint(point).withIconImage(marker)
-
-                    it.create(pointAnnotationOptions)
-                    mapView.mapboxMap.flyTo(
-                        CameraOptions.Builder().zoom(16.0).center(point).build()
-                    )
-                }
-            }
-            NoOpUpdate
-        }, modifier = modifier
-        )
-    }
 }

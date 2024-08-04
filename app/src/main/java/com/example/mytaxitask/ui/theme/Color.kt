@@ -12,6 +12,7 @@ val Pink40 = Color(0xFF7D5260)
 
 val yellow = Color(0xFFFFDA17)
 val green = Color(0xFF80ED99)
+val red = Color(0xFFff5454)
 val white = Color(0xFFFFFFFF)
 val black = Color(0xFF000000)
 val shadowColor = Color(0xFF253246).copy(0.15f)
