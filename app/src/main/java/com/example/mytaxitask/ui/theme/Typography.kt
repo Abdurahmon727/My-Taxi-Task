@@ -25,7 +25,7 @@ val Typography = Typography(
     ),
 
     bodyMedium = TextStyle(
-        color = black,
+//        color = black,
         fontFamily = latoFont,
         fontWeight = FontWeight.W400,
         fontSize = 18.sp,
