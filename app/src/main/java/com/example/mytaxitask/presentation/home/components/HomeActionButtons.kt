@@ -1,5 +1,11 @@
 package com.example.mytaxitask.presentation.home.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOut
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,7 +25,7 @@ import com.example.mytaxitask.core.extensions.Height
 
 
 @Composable
-fun HomeActionButtons(showMe: ()->Unit) {
+fun HomeActionButtons(visible: Boolean, showMe: () -> Unit) {
     val localConfig = LocalConfiguration.current
 
     Row(
@@ -28,51 +34,74 @@ fun HomeActionButtons(showMe: ()->Unit) {
             .padding(horizontal = 16.dp)
             .padding(top = localConfig.screenHeightDp.dp * .45f),
     ) {
-        RoundedButton(
-            fillColor = Color(0xFFf5f6f8),
-            onClick = {
-                //todo
-            },
+        AnimatedVisibility(
+            visible = visible,
+            exit = slideOutHorizontally(
+                targetOffsetX = { -it },
+            ) + fadeOut(),
+            enter = slideInHorizontally(
+                initialOffsetX = { -it },
+            ) + fadeIn()
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_chevrons), contentDescription = ""
-            )
+            RoundedButton(
+                fillColor = Color(0xFFf5f6f8),
+                onClick = {
+                    //todo
+                },
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_chevrons),
+                    contentDescription = ""
+                )
+            }
         }
         Spacer(modifier = Modifier.weight(1f))
 
-        Column {
-            RoundedButton(
-                fillColor = MaterialTheme.colorScheme.background,
-                onClick = {
-                    //todo
-                },
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_plus), contentDescription = ""
-                )
-            }
-            16.Height()
-            RoundedButton(
-                fillColor = MaterialTheme.colorScheme.background,
-                onClick = {
-                    //todo
-                },
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_minus), contentDescription = ""
-                )
-            }
-            16.Height()
-            RoundedButton(
-                fillColor = MaterialTheme.colorScheme.background,
-                onClick = {
-                    showMe.invoke()
-                },
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_navigator), contentDescription = ""
-                )
+        AnimatedVisibility(
+            visible = visible,
+            exit = slideOutHorizontally(
+                targetOffsetX = { it },
+            ) + fadeOut(),
+            enter = slideInHorizontally(
+                initialOffsetX = { it },
+            ) + fadeIn()
+        ) {
+            Column {
+                RoundedButton(
+                    fillColor = MaterialTheme.colorScheme.background,
+                    onClick = {
+                        //todo
+                    },
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_plus), contentDescription = ""
+                    )
+                }
+                16.Height()
+                RoundedButton(
+                    fillColor = MaterialTheme.colorScheme.background,
+                    onClick = {
+                        //todo
+                    },
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_minus), contentDescription = ""
+                    )
+                }
+                16.Height()
+                RoundedButton(
+                    fillColor = MaterialTheme.colorScheme.background,
+                    onClick = {
+                        showMe.invoke()
+                    },
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_navigator),
+                        contentDescription = ""
+                    )
+                }
             }
         }
     }
+
 }

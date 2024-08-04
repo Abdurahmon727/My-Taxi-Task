@@ -3,23 +3,34 @@ package com.example.mytaxitask.presentation.home
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.example.mytaxitask.core.base.AppScreen
+import com.example.mytaxitask.core.status.BottomSheetStatus
 import com.example.mytaxitask.presentation.home.components.HomeActionButtons
 import com.example.mytaxitask.presentation.home.components.HomeMapView
 import com.example.mytaxitask.presentation.home.components.HomeTopBar
-
+import io.morfly.compose.bottomsheet.material3.BottomSheetScaffold
+import io.morfly.compose.bottomsheet.material3.rememberBottomSheetScaffoldState
+import io.morfly.compose.bottomsheet.material3.rememberBottomSheetState
 
 class HomePage(val viewModel: HomePageViewModel) : AppScreen {
+    @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
     @Composable
     override fun Content() {
-        val intent = viewModel::onIntentDispatched
 
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions(),
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestMultiplePermissions(),
             onResult = { permissions ->
                 Log.i("LOCATION PERMISSION RESULT", "$permissions")
                 if (!permissions.values.all { it }) {
@@ -27,24 +38,51 @@ class HomePage(val viewModel: HomePageViewModel) : AppScreen {
                 } else {
 //                        relaunch = true
                 }
-            })
-
+            },
+        )
         val state = viewModel.state.collectAsState().value
+        val intent = viewModel::onIntentDispatched
 
-        Box(
-            modifier = Modifier.fillMaxSize(),
-        ) {
-            HomeMapView(
+
+        val sheetState = rememberBottomSheetState(
+            initialValue = BottomSheetStatus.Collapsed,
+            defineValues = {
+                BottomSheetStatus.Collapsed at height(100.dp)
+                BottomSheetStatus.Expanded at contentHeight
+            }
+        )
+
+        val scaffoldState = rememberBottomSheetScaffoldState(sheetState)
+
+        BottomSheetScaffold(
+            scaffoldState = scaffoldState,
+            sheetContent = {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp)
+                        .background(Color.Green)
+                )
+            },
+
+            ) {
+
+            Box(
                 modifier = Modifier.fillMaxSize(),
-                intent = intent,
-            )
+            ) {
+                HomeMapView(
+                    modifier = Modifier.fillMaxSize(),
+                    intent = intent,
+                )
 
-            HomeTopBar(isDriverActive = state.isDriverActive,
-                onChangeStatus = {
-                    intent.invoke(HomePageIntent.ToggleDriverStatus)
-                })
+                HomeTopBar(isDriverActive = state.isDriverActive,
+                    onChangeStatus = {
+                        intent.invoke(HomePageIntent.ToggleDriverStatus)
+                    })
 
-            HomeActionButtons(showMe = {
+                HomeActionButtons(
+                    visible = sheetState.targetValue == BottomSheetStatus.Collapsed,
+                    showMe = {
 //                coroutine.launch {
 //                    val location = LocationService().getCurrentLocation(context)
 //                    val point = Point.fromLngLat(location.longitude, location.latitude)
@@ -64,7 +102,10 @@ class HomePage(val viewModel: HomePageViewModel) : AppScreen {
 //                    }
 //                }
 //                mapView.value
-            })
+                })
+
+
+            }
         }
 
 //        LaunchedEffect(key1 = relaunch) {
