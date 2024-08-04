@@ -28,7 +28,7 @@ fun HomeMapView(
         modifier = modifier,
         factory = {
             MapView(it).also { mapView ->
-                mapView.mapboxMap.loadStyleUri(AppConstants.MAPURL)
+                mapView.mapboxMap.loadStyle(AppConstants.MAPURL)
                 mapView.scalebar.enabled = false
                 mapView.compass.enabled = false
                 mapView.logo.updateSettings { enabled = false }
