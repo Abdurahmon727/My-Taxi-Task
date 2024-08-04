@@ -13,27 +13,31 @@ import androidx.compose.material3.TabPosition
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableIntState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.mytaxitask.R
 import com.example.mytaxitask.core.composables.RoundedButton
+import com.example.mytaxitask.core.constants.AppConstants
 import com.example.mytaxitask.core.extensions.Width
 import com.example.mytaxitask.core.extensions.advancedShadow
-import com.example.mytaxitask.ui.home.DriverStatus
 import com.example.mytaxitask.ui.theme.green
 import com.example.mytaxitask.ui.theme.shadowColor
 
 
 @Composable
-fun HomeTopBar(selectedTabIndex: MutableIntState, driverStatuses: List<DriverStatus>) {
+fun HomeTopBar(
+    isDriverActive: Boolean,
+    onChangeStatus: () -> Unit
+) {
+    val driverStatuses = AppConstants.driverStatuses
+    val selectedTabIndex = if (isDriverActive) 1 else 0
 
     val indicator = @Composable { tabPositions: List<TabPosition> ->
         DriverStatusIndicator(
-            Modifier.myTabIndicatorOffset(tabPositions[selectedTabIndex.intValue]),
-            tabIndex = selectedTabIndex.intValue,
+            Modifier.myTabIndicatorOffset(tabPositions[selectedTabIndex]),
+            tabIndex = selectedTabIndex,
             tabs = driverStatuses,
         )
     }
@@ -46,8 +50,7 @@ fun HomeTopBar(selectedTabIndex: MutableIntState, driverStatuses: List<DriverSta
             },
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.ic_hamburger),
-                contentDescription = ""
+                painter = painterResource(id = R.drawable.ic_hamburger), contentDescription = ""
             )
         }
         12.Width()
@@ -66,15 +69,17 @@ fun HomeTopBar(selectedTabIndex: MutableIntState, driverStatuses: List<DriverSta
         ) {
             TabRow(
                 modifier = Modifier.fillMaxSize(),
-                selectedTabIndex = selectedTabIndex.intValue,
+                selectedTabIndex = selectedTabIndex,
                 indicator = indicator,
                 divider = {},
             ) {
                 driverStatuses.onEachIndexed { index, tab ->
                     DriverStatusTab(
-                        index = index,
                         tab = tab,
-                        selectedTabIndex = selectedTabIndex
+                        isSelected = index == selectedTabIndex,
+                        onChange = {
+                            onChangeStatus.invoke()
+                        }
                     )
                 }
             }

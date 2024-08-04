@@ -19,7 +19,7 @@ import com.example.mytaxitask.core.extensions.Height
 
 
 @Composable
-fun HomeActionButtons() {
+fun HomeActionButtons(showMe: ()->Unit) {
     val localConfig = LocalConfiguration.current
 
     Row(
@@ -66,7 +66,7 @@ fun HomeActionButtons() {
             RoundedButton(
                 fillColor = MaterialTheme.colorScheme.background,
                 onClick = {
-                    //todo
+                    showMe.invoke()
                 },
             ) {
                 Image(
