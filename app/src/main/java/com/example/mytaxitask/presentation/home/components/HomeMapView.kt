@@ -11,6 +11,7 @@ import com.example.mytaxitask.core.constants.AppConstants
 import com.example.mytaxitask.presentation.home.HomePageIntent
 import com.mapbox.maps.MapView
 import com.mapbox.maps.plugin.attribution.attribution
+import com.mapbox.maps.plugin.compass.compass
 import com.mapbox.maps.plugin.logo.logo
 import com.mapbox.maps.plugin.scalebar.scalebar
 
@@ -29,6 +30,7 @@ fun HomeMapView(
             MapView(it).also { mapView ->
                 mapView.mapboxMap.loadStyleUri(AppConstants.MAPURL)
                 mapView.scalebar.enabled = false
+                mapView.compass.enabled = false
                 mapView.logo.updateSettings { enabled = false }
                 mapView.attribution.updateSettings {
                     enabled = false
