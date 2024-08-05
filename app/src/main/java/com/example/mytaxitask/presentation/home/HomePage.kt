@@ -44,7 +44,7 @@ class HomePage(val viewModel: HomePageViewModel) : AppScreen {
         val sheetState = rememberBottomSheetState(
             initialValue = BottomSheetStatus.Collapsed,
             defineValues = {
-                BottomSheetStatus.Collapsed at height(100.dp)
+                BottomSheetStatus.Collapsed at height(150.dp)
                 BottomSheetStatus.Expanded at contentHeight
             }
         )
