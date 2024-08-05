@@ -47,7 +47,6 @@ class LocationService {
         } catch (e: Exception) {
             throw LocationServiceException.UnknownException(e)
         }
-
     }
 
     fun Context.hasPermissions(vararg permissions: String) =

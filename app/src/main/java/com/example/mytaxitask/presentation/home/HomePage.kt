@@ -72,7 +72,9 @@ class HomePage(val viewModel: HomePageViewModel) : AppScreen {
 
                 HomeActionButtons(
                     visible = sheetState.targetValue == BottomSheetStatus.Collapsed,
-                    showMe = {
+                    intent = intent,
+//                    showMe = {
+
 //                coroutine.launch {
 //                    val location = LocationService().getCurrentLocation(context)
 //                    val point = Point.fromLngLat(location.longitude, location.latitude)
@@ -92,7 +94,8 @@ class HomePage(val viewModel: HomePageViewModel) : AppScreen {
 //                    }
 //                }
 //                mapView.value
-                    })
+//                    }
+                )
 
 
             }

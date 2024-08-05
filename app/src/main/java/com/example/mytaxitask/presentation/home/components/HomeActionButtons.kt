@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOut
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -17,16 +16,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.mytaxitask.R
 import com.example.mytaxitask.core.composables.RoundedButton
 import com.example.mytaxitask.core.extensions.Height
+import com.example.mytaxitask.presentation.home.HomePageIntent
 
 
 @Composable
-fun HomeActionButtons(visible: Boolean, showMe: () -> Unit) {
+fun HomeActionButtons(visible: Boolean, intent: (HomePageIntent) -> Unit) {
     val localConfig = LocalConfiguration.current
+    val context = LocalContext.current
 
     Row(
         modifier = Modifier
@@ -70,7 +72,7 @@ fun HomeActionButtons(visible: Boolean, showMe: () -> Unit) {
                 RoundedButton(
                     fillColor = MaterialTheme.colorScheme.background,
                     onClick = {
-                        //todo
+                        intent.invoke(HomePageIntent.MapZoomIn)
                     },
                 ) {
                     Image(
@@ -81,7 +83,7 @@ fun HomeActionButtons(visible: Boolean, showMe: () -> Unit) {
                 RoundedButton(
                     fillColor = MaterialTheme.colorScheme.background,
                     onClick = {
-                        //todo
+                        intent.invoke(HomePageIntent.MapZoomOut)
                     },
                 ) {
                     Image(
@@ -92,7 +94,7 @@ fun HomeActionButtons(visible: Boolean, showMe: () -> Unit) {
                 RoundedButton(
                     fillColor = MaterialTheme.colorScheme.background,
                     onClick = {
-                        showMe.invoke()
+                        intent.invoke(HomePageIntent.ShowMyLocation(context))
                     },
                 ) {
                     Image(
@@ -103,5 +105,4 @@ fun HomeActionButtons(visible: Boolean, showMe: () -> Unit) {
             }
         }
     }
-
 }
