@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import com.example.mytaxitask.presentation.home.HomePage
 import com.example.mytaxitask.presentation.home.HomePageViewModel
 import com.example.mytaxitask.presentation.theme.MyTaxiTaskTheme
+import com.example.mytaxitask.service.LocationService
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,10 +19,10 @@ class MainActivity : ComponentActivity() {
             MyTaxiTaskTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
-                    HomePage(viewModel = HomePageViewModel()).Content()
+                    val viewModel = HomePageViewModel(locationService = LocationService())
+                    HomePage(viewModel = viewModel).Content()
                 }
             }
         }

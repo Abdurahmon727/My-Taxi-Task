@@ -1,3 +1,5 @@
+package com.example.mytaxitask.service
+
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
@@ -9,6 +11,7 @@ import com.google.android.gms.location.CurrentLocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import kotlinx.coroutines.tasks.await
+
 
 class LocationService {
 

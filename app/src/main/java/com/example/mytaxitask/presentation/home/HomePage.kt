@@ -37,7 +37,7 @@ class HomePage(val viewModel: HomePageViewModel) : AppScreen {
                 }
             },
         )
-        val state = viewModel.state.collectAsState().value
+        val uiState = viewModel.state.collectAsState().value
         val intent = viewModel::onIntentDispatched
 
 
@@ -65,10 +65,12 @@ class HomePage(val viewModel: HomePageViewModel) : AppScreen {
                     intent = intent,
                 )
 
-                HomeTopBar(isDriverActive = state.isDriverActive,
+                HomeTopBar(
+                    isDriverActive = uiState.isDriverActive,
                     onChangeStatus = {
                         intent.invoke(HomePageIntent.ToggleDriverStatus)
-                    })
+                    },
+                )
 
                 HomeActionButtons(
                     visible = sheetState.targetValue == BottomSheetStatus.Collapsed,
@@ -76,7 +78,7 @@ class HomePage(val viewModel: HomePageViewModel) : AppScreen {
 //                    showMe = {
 
 //                coroutine.launch {
-//                    val location = LocationService().getCurrentLocation(context)
+//                    val location = com.example.mytaxitask.service.LocationService().getCurrentLocation(context)
 //                    val point = Point.fromLngLat(location.longitude, location.latitude)
 //                    val pointAnnotationManager =
 //                        mapView.value?.annotations?.createPointAnnotationManager()
@@ -103,16 +105,16 @@ class HomePage(val viewModel: HomePageViewModel) : AppScreen {
 
 //        LaunchedEffect(key1 = relaunch) {
 //            try {
-//                val location = LocationService().getCurrentLocation(context)
+//                val location = com.example.mytaxitask.service.LocationService().getCurrentLocation(context)
 //                    val point = Point.fromLngLat(location.longitude, location.latitude)
 //
-//            } catch (e: LocationService.LocationServiceException) {
+//            } catch (e: com.example.mytaxitask.service.LocationService.LocationServiceException) {
 //                when (e) {
-//                    is LocationService.LocationServiceException.LocationDisabledException -> {
+//                    is com.example.mytaxitask.service.LocationService.LocationServiceException.LocationDisabledException -> {
 //                        //handle location disabled, show dialog or a snack-bar to enable location
 //                    }
 //
-//                    is LocationService.LocationServiceException.MissingPermissionException -> {
+//                    is com.example.mytaxitask.service.LocationService.LocationServiceException.MissingPermissionException -> {
 //                        permissionRequest.launch(
 //                            arrayOf(
 //                                android.Manifest.permission.ACCESS_FINE_LOCATION,
@@ -121,11 +123,11 @@ class HomePage(val viewModel: HomePageViewModel) : AppScreen {
 //                        )
 //                    }
 //
-//                    is LocationService.LocationServiceException.NoInternetException -> {
+//                    is com.example.mytaxitask.service.LocationService.LocationServiceException.NoInternetException -> {
 //                        //handle no network enabled, show dialog or a snack-bar to enable network
 //                    }
 //
-//                    is LocationService.LocationServiceException.UnknownException -> {
+//                    is com.example.mytaxitask.service.LocationService.LocationServiceException.UnknownException -> {
 //                        //handle unknown exception
 //                    }
 //

@@ -1,11 +1,11 @@
 package com.example.mytaxitask.presentation.home
 
-import LocationService
 import android.content.Context
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mytaxitask.R
+import com.example.mytaxitask.service.LocationService
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapView
@@ -18,7 +18,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 
-class HomePageViewModel : ViewModel() {
+class HomePageViewModel(
+    private val locationService: LocationService,
+) : ViewModel() {
     val state = MutableStateFlow(HomePageState())
 
 
@@ -37,7 +39,7 @@ class HomePageViewModel : ViewModel() {
     private fun init(mapView: MapView, context: Context) {
         state.update { it.copy(mapView = mapView) }
         viewModelScope.launch {
-            val location = LocationService().getCurrentLocation(context)
+            val location = locationService.getCurrentLocation(context)
             val point = Point.fromLngLat(location.longitude, location.latitude)
             val pointAnnotationManager = mapView.annotations.createPointAnnotationManager()
 
@@ -60,7 +62,7 @@ class HomePageViewModel : ViewModel() {
         viewModelScope.launch {
             state.value.mapView?.let { mapView ->
 
-                val location = LocationService().getCurrentLocation(context)
+                val location = locationService.getCurrentLocation(context)
                 val point = Point.fromLngLat(location.longitude, location.latitude)
                 val pointAnnotationManager = mapView.annotations.createPointAnnotationManager()
 
@@ -95,8 +97,6 @@ class HomePageViewModel : ViewModel() {
             )
         }
     }
-
-
 }
 
 
