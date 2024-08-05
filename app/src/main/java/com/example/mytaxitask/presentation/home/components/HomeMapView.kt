@@ -31,21 +31,6 @@ fun HomeMapView(
                 }
                 intent.invoke(HomePageIntent.Init(mapView, context))
             }
-        },
-//        update = { mapView ->
-//            if (point != null) {
-//                pointAnnotationManager?.let {
-//                    it.deleteAll()
-//                    val pointAnnotationOptions =
-//                        PointAnnotationOptions().withPoint(point).withIconImage(marker)
-//
-//                    it.create(pointAnnotationOptions)
-//                    mapView.mapboxMap.flyTo(
-//                        CameraOptions.Builder().zoom(16.0).center(point).build()
-//                    )
-//                }
-//            }
-//            NoOpUpdate
-//        },
+        }
     )
 }

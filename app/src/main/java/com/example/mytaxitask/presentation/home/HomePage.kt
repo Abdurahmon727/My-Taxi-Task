@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
@@ -25,20 +24,19 @@ class HomePage(val viewModel: HomePageViewModel) : AppScreen {
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
     @Composable
     override fun Content() {
+        val uiState = viewModel.state.collectAsState().value
+        val intent = viewModel::onIntentDispatched
 
         rememberLauncherForActivityResult(
             contract = ActivityResultContracts.RequestMultiplePermissions(),
             onResult = { permissions ->
-                Log.i("LOCATION PERMISSION RESULT", "$permissions")
                 if (!permissions.values.all { it }) {
-                    //handle permission denied
+                    Log.i("LOCATION PERMISSION RESULT", "Failed")
                 } else {
-//                        relaunch = true
+                    Log.i("LOCATION PERMISSION RESULT", "Succeed")
                 }
             },
         )
-        val uiState = viewModel.state.collectAsState().value
-        val intent = viewModel::onIntentDispatched
 
 
         val sheetState = rememberBottomSheetState(
@@ -48,7 +46,6 @@ class HomePage(val viewModel: HomePageViewModel) : AppScreen {
                 BottomSheetStatus.Expanded at contentHeight
             }
         )
-
         val scaffoldState = rememberBottomSheetScaffoldState(sheetState)
 
         BottomSheetScaffold(
@@ -57,85 +54,22 @@ class HomePage(val viewModel: HomePageViewModel) : AppScreen {
                 HomeBottomSheetContent()
             },
         ) {
-            Box(
+            HomeMapView(
                 modifier = Modifier.fillMaxSize(),
-            ) {
-                HomeMapView(
-                    modifier = Modifier.fillMaxSize(),
-                    intent = intent,
-                )
+                intent = intent,
+            )
 
-                HomeTopBar(
-                    isDriverActive = uiState.isDriverActive,
-                    onChangeStatus = {
-                        intent.invoke(HomePageIntent.ToggleDriverStatus)
-                    },
-                )
+            HomeTopBar(
+                isDriverActive = uiState.isDriverActive,
+                onChangeStatus = {
+                    intent.invoke(HomePageIntent.ToggleDriverStatus)
+                },
+            )
 
-                HomeActionButtons(
-                    visible = sheetState.targetValue == BottomSheetStatus.Collapsed,
-                    intent = intent,
-//                    showMe = {
-
-//                coroutine.launch {
-//                    val location = com.example.mytaxitask.service.LocationService().getCurrentLocation(context)
-//                    val point = Point.fromLngLat(location.longitude, location.latitude)
-//                    val pointAnnotationManager =
-//                        mapView.value?.annotations?.createPointAnnotationManager()
-//
-//                    pointAnnotationManager?.let {
-//                        it.deleteAll()
-//
-//                        val pointAnnotationOptions =
-//                            PointAnnotationOptions().withPoint(point).withIconImage(marker)
-//
-//                        it.create(pointAnnotationOptions)
-//                        mapView.value?.mapboxMap?.flyTo(
-//                            CameraOptions.Builder().zoom(16.0).center(point).build()
-//                        )
-//                    }
-//                }
-//                mapView.value
-//                    }
-                )
-
-
-            }
+            HomeActionButtons(
+                visible = sheetState.targetValue == BottomSheetStatus.Collapsed,
+                intent = intent
+            )
         }
-
-//        LaunchedEffect(key1 = relaunch) {
-//            try {
-//                val location = com.example.mytaxitask.service.LocationService().getCurrentLocation(context)
-//                    val point = Point.fromLngLat(location.longitude, location.latitude)
-//
-//            } catch (e: com.example.mytaxitask.service.LocationService.LocationServiceException) {
-//                when (e) {
-//                    is com.example.mytaxitask.service.LocationService.LocationServiceException.LocationDisabledException -> {
-//                        //handle location disabled, show dialog or a snack-bar to enable location
-//                    }
-//
-//                    is com.example.mytaxitask.service.LocationService.LocationServiceException.MissingPermissionException -> {
-//                        permissionRequest.launch(
-//                            arrayOf(
-//                                android.Manifest.permission.ACCESS_FINE_LOCATION,
-//                                android.Manifest.permission.ACCESS_COARSE_LOCATION
-//                            )
-//                        )
-//                    }
-//
-//                    is com.example.mytaxitask.service.LocationService.LocationServiceException.NoInternetException -> {
-//                        //handle no network enabled, show dialog or a snack-bar to enable network
-//                    }
-//
-//                    is com.example.mytaxitask.service.LocationService.LocationServiceException.UnknownException -> {
-//                        //handle unknown exception
-//                    }
-//
-//                    else -> {}
-//                }
-//            }
-//        }
     }
-
-
 }
