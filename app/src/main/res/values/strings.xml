@@ -2,5 +2,8 @@
     <string name="app_name">My Taxi Task</string>
     <string name="active">Faol</string>
     <string name="busy">Band</string>
+    <string name="tarif">Tarif</string>
+    <string name="orders">Buyurtmalar</string>
+    <string name="rocket">Bordur</string>
 
 </resources>
