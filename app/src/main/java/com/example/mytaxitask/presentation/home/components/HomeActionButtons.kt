@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.drawable.toBitmap
 import com.example.mytaxitask.R
 import com.example.mytaxitask.core.composables.RoundedButton
 import com.example.mytaxitask.core.extensions.Height
@@ -93,7 +94,8 @@ fun HomeActionButtons(visible: Boolean, intent: (HomePageIntent) -> Unit) {
                 RoundedButton(
                     fillColor = MaterialTheme.colorScheme.background,
                     onClick = {
-                        intent.invoke(HomePageIntent.ShowMyLocation(context))
+                        val marker = context.getDrawable(R.drawable.ic_car)!!.toBitmap()
+                        intent.invoke(HomePageIntent.ShowMyLocation(marker))
                     },
                 ) {
                     Image(

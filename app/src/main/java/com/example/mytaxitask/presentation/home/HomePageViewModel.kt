@@ -1,10 +1,10 @@
 package com.example.mytaxitask.presentation.home
 
-import android.content.Context
-import androidx.core.graphics.drawable.toBitmap
+import android.graphics.Bitmap
+import android.location.Location
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mytaxitask.R
+import com.example.mytaxitask.domain.model.Either
 import com.example.mytaxitask.service.LocationService
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
@@ -24,14 +24,15 @@ class HomePageViewModel(
     private val locationService: LocationService,
 ) : ViewModel() {
     val state = MutableStateFlow(HomePageState())
+
     private var mapBox: MapboxMap? = null
     private var pointAnnotationManager: PointAnnotationManager? = null
 
 
     fun onIntentDispatched(intent: HomePageIntent) {
         when (intent) {
-            is HomePageIntent.Init -> init(intent.mapView, intent.context)
-            is HomePageIntent.ShowMyLocation -> showMyLocation(intent.context)
+            is HomePageIntent.InitMap -> initMap(intent.mapView)
+            is HomePageIntent.ShowMyLocation -> showMyLocation(intent.marker)
             is HomePageIntent.MapZoomIn -> mapZoomIn()
             is HomePageIntent.MapZoomOut -> mapZoomOut()
             is HomePageIntent.ToggleDriverStatus -> {
@@ -41,39 +42,24 @@ class HomePageViewModel(
     }
 
 
-    private fun init(mapView: MapView, context: Context) {
+    private fun initMap(mapView: MapView) {
         mapBox = mapView.mapboxMap
-        viewModelScope.launch {
-            val location = locationService.getCurrentLocation(context)
-            val point = Point.fromLngLat(location.longitude, location.latitude)
-            pointAnnotationManager = mapView.annotations.createPointAnnotationManager()
-
-            pointAnnotationManager?.let {
-                it.deleteAll()
-
-                val marker = context.getDrawable(R.drawable.ic_car)!!.toBitmap()
-                val pointAnnotationOptions =
-                    PointAnnotationOptions().withPoint(point).withIconImage(marker)
-
-                it.create(pointAnnotationOptions)
-                mapView.mapboxMap.flyTo(
-                    CameraOptions.Builder().zoom(16.0).center(point).build()
-                )
-            }
-        }
+        pointAnnotationManager = mapView.annotations.createPointAnnotationManager()
     }
 
-    private fun showMyLocation(context: Context) {
+    private fun showMyLocation(marker:Bitmap) {
         viewModelScope.launch {
             mapBox?.let { mapBox ->
-                val currentLocation = locationService.getCurrentLocation(context)
-                val currentPoint =
-                    Point.fromLngLat(currentLocation.longitude, currentLocation.latitude)
+                val currentLocation = locationService.getCurrentLocation()
+                if (currentLocation is Either.Left) {
+                    return@launch
+                }
+                val point = (currentLocation as Either.Right<Location>).data
+                val currentPoint = Point.fromLngLat(point.longitude, point.latitude)
 
                 pointAnnotationManager?.let {
                     it.deleteAll()
 
-                    val marker = context.getDrawable(R.drawable.ic_car)!!.toBitmap()
                     val pointAnnotationOptions =
                         PointAnnotationOptions().withPoint(currentPoint).withIconImage(marker)
 

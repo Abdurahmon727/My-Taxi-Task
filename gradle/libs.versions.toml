@@ -12,6 +12,7 @@ location = "21.0.1"
 coroutinesPlayServices = "1.6.4"
 mapBox = "11.5.1"
 advancedBottomSheet = "0.1.0"
+accompanistPermissions = "0.35.0-alpha"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -32,6 +33,7 @@ play-services-location = { group = "com.google.android.gms", name = "play-servic
 coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "coroutinesPlayServices" }
 mapbox-android = { group = "com.mapbox.maps", name = "android", version.ref = "mapBox" }
 advanced-bottom-sheet = { group = "io.morfly.compose", name = "advanced-bottomsheet-material3", version.ref = "advancedBottomSheet" }
+accompanist-permisssions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanistPermissions" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

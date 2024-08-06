@@ -1,68 +1,68 @@
 package com.example.mytaxitask.service
 
 import android.Manifest
-import android.annotation.SuppressLint
+import android.app.Application
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
-import androidx.core.app.ActivityCompat
-import com.google.android.gms.location.CurrentLocationRequest
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
-import kotlinx.coroutines.tasks.await
+import androidx.core.content.ContextCompat
+import com.example.mytaxitask.domain.model.Either
+import com.example.mytaxitask.domain.model.Message
+import com.google.android.gms.location.FusedLocationProviderClient
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.suspendCancellableCoroutine
 
 
-class LocationService {
+class LocationService(
+    private val fusedLocationProviderClient: FusedLocationProviderClient,
+    private val application: Application,
+) {
 
-    @SuppressLint("MissingPermission")
-    suspend fun getCurrentLocation(context: Context): Location {
+    @OptIn(ExperimentalCoroutinesApi::class)
+    suspend fun getCurrentLocation(): Either<Location> {
+        val hasAccessFineLocationPermission = ContextCompat.checkSelfPermission(
+            application,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
 
-        if (!context.hasPermissions(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            )
-        ) {
-            throw throw LocationServiceException.MissingPermissionException()
+        val hasAccessCoarseLocationPermission = ContextCompat.checkSelfPermission(
+            application,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+
+        val locationManager = application.getSystemService(
+            Context.LOCATION_SERVICE
+        ) as LocationManager
+
+        val isGpsEnabled = locationManager
+            .isProviderEnabled(LocationManager.NETWORK_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+
+        if (!isGpsEnabled && !(hasAccessCoarseLocationPermission || hasAccessFineLocationPermission)) {
+            return Either.Left(Message("Location permission denied"))
         }
 
-        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        val isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-
-        if (!isGpsEnabled) {
-            throw LocationServiceException.LocationDisabledException()
-        }
-        if (!isNetworkEnabled) {
-            throw LocationServiceException.NoInternetException()
-        }
-
-        val locationProvider = LocationServices.getFusedLocationProviderClient(context)
-        val request = CurrentLocationRequest.Builder()
-            .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
-            .build()
-
-        try {
-            val location = locationProvider.getCurrentLocation(request, null).await()
-
-            return location
-
-        } catch (e: Exception) {
-            throw LocationServiceException.UnknownException(e)
+        return suspendCancellableCoroutine { cont ->
+            fusedLocationProviderClient.lastLocation.apply {
+                if (isComplete) {
+                    if (isSuccessful) {
+                        cont.resume(Either.Right(result)) {} // Resume coroutine with location result
+                    } else {
+                        cont.resume(Either.Left(Message("Something went wrong"))) {} // Resume coroutine with null location result
+                    }
+                    return@suspendCancellableCoroutine
+                }
+                addOnSuccessListener {
+                    cont.resume(Either.Right(it)) {}  // Resume coroutine with location result
+                }
+                addOnFailureListener {
+                    cont.resume(Either.Left(Message("Something went wrong ${it.message}"))) {} // Resume coroutine with null location result
+                }
+                addOnCanceledListener {
+                    cont.cancel() // Cancel the coroutine
+                }
+            }
         }
     }
-
-    fun Context.hasPermissions(vararg permissions: String) =
-        permissions.all {
-            ActivityCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
-        }
-
-
-    sealed class LocationServiceException : Exception() {
-        class MissingPermissionException : LocationServiceException()
-        class LocationDisabledException : LocationServiceException()
-        class NoInternetException : LocationServiceException()
-        class UnknownException(val exception: Exception) : LocationServiceException()
-    }
-
 }

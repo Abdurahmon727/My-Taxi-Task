@@ -92,4 +92,7 @@ dependencies {
     // advanced bottom sheet
     implementation(libs.advanced.bottom.sheet)
 
+    // permission
+    implementation(libs.accompanist.permisssions)
+
 }

@@ -11,6 +11,7 @@ import com.example.mytaxitask.presentation.home.HomePage
 import com.example.mytaxitask.presentation.home.HomePageViewModel
 import com.example.mytaxitask.presentation.theme.MyTaxiTaskTheme
 import com.example.mytaxitask.service.LocationService
+import com.google.android.gms.location.LocationServices
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,7 +22,17 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
-                    val viewModel = HomePageViewModel(locationService = LocationService())
+                    val fusedLocationProviderClient =
+                        LocationServices.getFusedLocationProviderClient(
+                            application
+                        )
+
+                    val viewModel = HomePageViewModel(
+                        locationService = LocationService(
+                            application = application,
+                            fusedLocationProviderClient = fusedLocationProviderClient
+                        )
+                    )
                     HomePage(viewModel = viewModel).Content()
                 }
             }
