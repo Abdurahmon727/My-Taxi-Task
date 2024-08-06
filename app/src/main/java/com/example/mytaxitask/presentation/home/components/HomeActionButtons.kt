@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -46,7 +45,7 @@ fun HomeActionButtons(visible: Boolean, intent: (HomePageIntent) -> Unit) {
             ) + fadeIn()
         ) {
             RoundedButton(
-                fillColor = Color(0xFFf5f6f8),
+                fillColor = MaterialTheme.colorScheme.secondaryContainer,
                 onClick = {
                     //todo
                 },

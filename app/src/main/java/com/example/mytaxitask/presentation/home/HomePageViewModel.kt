@@ -9,8 +9,10 @@ import com.example.mytaxitask.service.LocationService
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapView
+import com.mapbox.maps.MapboxMap
 import com.mapbox.maps.plugin.animation.flyTo
 import com.mapbox.maps.plugin.annotation.annotations
+import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,6 +24,8 @@ class HomePageViewModel(
     private val locationService: LocationService,
 ) : ViewModel() {
     val state = MutableStateFlow(HomePageState())
+    private var mapBox: MapboxMap? = null
+    private var pointAnnotationManager: PointAnnotationManager? = null
 
 
     fun onIntentDispatched(intent: HomePageIntent) {
@@ -36,14 +40,15 @@ class HomePageViewModel(
         }
     }
 
+
     private fun init(mapView: MapView, context: Context) {
-        state.update { it.copy(mapView = mapView) }
+        mapBox = mapView.mapboxMap
         viewModelScope.launch {
             val location = locationService.getCurrentLocation(context)
             val point = Point.fromLngLat(location.longitude, location.latitude)
-            val pointAnnotationManager = mapView.annotations.createPointAnnotationManager()
+            pointAnnotationManager = mapView.annotations.createPointAnnotationManager()
 
-            pointAnnotationManager.let {
+            pointAnnotationManager?.let {
                 it.deleteAll()
 
                 val marker = context.getDrawable(R.drawable.ic_car)!!.toBitmap()
@@ -60,22 +65,21 @@ class HomePageViewModel(
 
     private fun showMyLocation(context: Context) {
         viewModelScope.launch {
-            state.value.mapView?.let { mapView ->
+            mapBox?.let { mapBox ->
+                val currentLocation = locationService.getCurrentLocation(context)
+                val currentPoint =
+                    Point.fromLngLat(currentLocation.longitude, currentLocation.latitude)
 
-                val location = locationService.getCurrentLocation(context)
-                val point = Point.fromLngLat(location.longitude, location.latitude)
-                val pointAnnotationManager = mapView.annotations.createPointAnnotationManager()
-
-                pointAnnotationManager.let {
+                pointAnnotationManager?.let {
                     it.deleteAll()
 
                     val marker = context.getDrawable(R.drawable.ic_car)!!.toBitmap()
                     val pointAnnotationOptions =
-                        PointAnnotationOptions().withPoint(point).withIconImage(marker)
+                        PointAnnotationOptions().withPoint(currentPoint).withIconImage(marker)
 
                     it.create(pointAnnotationOptions)
-                    mapView.mapboxMap.flyTo(
-                        CameraOptions.Builder().zoom(16.0).center(point).build()
+                    mapBox.flyTo(
+                        CameraOptions.Builder().zoom(16.0).center(currentPoint).build()
                     )
                 }
             }
@@ -83,17 +87,17 @@ class HomePageViewModel(
     }
 
     private fun mapZoomIn() {
-        state.value.mapView?.let { mapView ->
-            mapView.mapboxMap.flyTo(
-                CameraOptions.Builder().zoom(mapView.mapboxMap.cameraState.zoom + 1).build()
+        mapBox?.let { mapBox ->
+            mapBox.flyTo(
+                CameraOptions.Builder().zoom(mapBox.cameraState.zoom + 1).build()
             )
         }
     }
 
     private fun mapZoomOut() {
-        state.value.mapView?.let { mapView ->
-            mapView.mapboxMap.flyTo(
-                CameraOptions.Builder().zoom(mapView.mapboxMap.cameraState.zoom - 1).build()
+        mapBox?.let { mapBox ->
+            mapBox.flyTo(
+                CameraOptions.Builder().zoom(mapBox.cameraState.zoom - 1).build()
             )
         }
     }
