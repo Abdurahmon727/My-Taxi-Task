@@ -61,6 +61,7 @@ class HomePage(val viewModel: HomePageViewModel) : AppScreen {
 
             HomeTopBar(
                 isDriverActive = uiState.isDriverActive,
+                speed = uiState.speed,
                 onChangeStatus = {
                     intent.invoke(HomePageIntent.ToggleDriverStatus)
                 },

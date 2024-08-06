@@ -29,6 +29,7 @@ import com.example.mytaxitask.presentation.theme.shadowColor
 @Composable
 fun HomeTopBar(
     isDriverActive: Boolean,
+    speed: Int,
     onChangeStatus: () -> Unit
 ) {
     val driverStatuses = AppConstants.driverStatuses
@@ -92,7 +93,7 @@ fun HomeTopBar(
             fillColor = green
         ) {
             Text(
-                text = "95", style = MaterialTheme.typography.headlineMedium,
+                text = "$speed", style = MaterialTheme.typography.headlineMedium,
             )
         }
     }
