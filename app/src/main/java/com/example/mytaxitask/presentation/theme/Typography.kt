@@ -14,24 +14,23 @@ val latoFont = FontFamily(
     Font(R.font.lato_light, FontWeight.Light),
 )
 
+private val defaultTypography = Typography()
+
 // Set of Material typography styles to start with
 val Typography = Typography(
-    bodyLarge = TextStyle(
+    bodyLarge = defaultTypography.bodyLarge.copy(
         fontFamily = latoFont,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
     ),
 
-    bodyMedium = TextStyle(
-//        color = black,
+    bodyMedium = defaultTypography.bodyMedium.copy(
         fontFamily = latoFont,
         fontWeight = FontWeight.W400,
         fontSize = 18.sp,
     ),
 
-    headlineMedium = TextStyle(
+    headlineMedium = defaultTypography.headlineMedium.copy(
         color = black,
         fontFamily = latoFont,
         fontWeight = FontWeight.W700,
@@ -42,16 +41,12 @@ val Typography = Typography(
         fontFamily = latoFont,
         fontWeight = FontWeight.Normal,
         fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
     ),
 
     labelSmall = TextStyle(
         fontFamily = latoFont,
         fontWeight = FontWeight.Medium,
         fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
     )
 
 )

@@ -68,7 +68,10 @@ fun HomeTopBar(
                 .background(MaterialTheme.colorScheme.background)
         ) {
             TabRow(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(5.dp)
+                    .clip(RoundedCornerShape(10.dp)),
                 selectedTabIndex = selectedTabIndex,
                 indicator = indicator,
                 divider = {},
