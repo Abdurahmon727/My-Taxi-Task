@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.example.mytaxitask.domain.model.DriverStatus
+import com.example.mytaxitask.presentation.theme.black
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -16,7 +17,9 @@ import kotlinx.coroutines.flow.emptyFlow
 @Composable
 fun DriverStatusTab(tab: DriverStatus, isSelected: Boolean, onChange: () -> Unit) {
     Tab(
-        text = {
+        selectedContentColor = black,
+        unselectedContentColor = MaterialTheme.colorScheme.inverseSurface,
+        icon = {
             Text(
                 text = stringResource(id = tab.statusTitle),
                 style = if (isSelected) MaterialTheme.typography.headlineMedium else MaterialTheme.typography.bodyMedium,

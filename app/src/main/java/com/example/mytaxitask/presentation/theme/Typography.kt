@@ -8,7 +8,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.mytaxitask.R
 
-val latoFont = FontFamily(
+private val latoFont = FontFamily(
     Font(R.font.lato_regular, FontWeight.Normal),
     Font(R.font.lato_bold, FontWeight.Bold),
     Font(R.font.lato_light, FontWeight.Light),
