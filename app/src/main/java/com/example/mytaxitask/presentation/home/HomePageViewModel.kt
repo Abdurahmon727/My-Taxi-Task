@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.location.Location
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mytaxitask.data.LocalStorage
 import com.example.mytaxitask.domain.model.Either
 import com.example.mytaxitask.service.LocationService
 import com.mapbox.geojson.Point
@@ -22,6 +23,7 @@ import kotlinx.coroutines.launch
 
 class HomePageViewModel(
     private val locationService: LocationService,
+    private val localStorage: LocalStorage,
 ) : ViewModel() {
     val state = MutableStateFlow(HomePageState())
 
@@ -47,7 +49,7 @@ class HomePageViewModel(
         pointAnnotationManager = mapView.annotations.createPointAnnotationManager()
     }
 
-    private fun showMyLocation(marker:Bitmap) {
+    private fun showMyLocation(marker: Bitmap) {
         viewModelScope.launch {
             mapBox?.let { mapBox ->
                 val currentLocation = locationService.getCurrentLocation()
@@ -68,6 +70,8 @@ class HomePageViewModel(
                         CameraOptions.Builder().zoom(16.0).center(currentPoint).build()
                     )
                 }
+
+                localStorage.lastSavedLocation = currentPoint
             }
         }
     }
