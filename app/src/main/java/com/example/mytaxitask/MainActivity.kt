@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import com.example.mytaxitask.data.LocalStorage
 import com.example.mytaxitask.presentation.home.HomePage
 import com.example.mytaxitask.presentation.home.HomePageViewModel
@@ -20,7 +19,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyTaxiTaskTheme {
-                val context = LocalContext.current
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
@@ -34,7 +32,7 @@ class MainActivity : ComponentActivity() {
                         locationService = LocationService(
                             application = application,
                             fusedLocationProviderClient = fusedLocationProviderClient
-                        ), localStorage = LocalStorage(context)
+                        ), localStorage = LocalStorage(application)
                     )
                     HomePage(viewModel = viewModel).Content()
                 }

@@ -55,7 +55,7 @@ fun HomeBottomSheetContent() {
 @Composable
 private fun ItemUI(item: BottomSheetItemModel, hasTopLine: Boolean, trailingColor: Color) {
     Column {
-        if (hasTopLine) HorizontalDivider(color = trailingColor.copy())
+        if (hasTopLine) HorizontalDivider(color = trailingColor.copy(0.1f))
         Row(
             modifier = Modifier.padding(vertical = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
