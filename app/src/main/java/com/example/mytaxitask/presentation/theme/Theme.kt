@@ -21,6 +21,8 @@ private val DarkColorScheme = darkColorScheme(
     background = black,
     inverseSurface = white,
     secondaryContainer = darkContainerColor,
+    outlineVariant = darkTrailingColor,
+    surface = darkSurfaceColor,
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -29,6 +31,9 @@ private val LightColorScheme = lightColorScheme(
     background = white,
     inverseSurface = black,
     secondaryContainer = lightContainerColor,
+    outlineVariant = lightTrailingColor,
+    surface = lightSurfaceColor,
+
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),

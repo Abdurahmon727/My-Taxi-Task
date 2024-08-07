@@ -19,7 +19,7 @@ fun DriverStatusTab(tab: DriverStatus, isSelected: Boolean, onChange: () -> Unit
     Tab(
         selectedContentColor = black,
         unselectedContentColor = MaterialTheme.colorScheme.inverseSurface,
-        icon = {
+        text = {
             Text(
                 text = stringResource(id = tab.statusTitle),
                 style = if (isSelected) MaterialTheme.typography.headlineMedium else MaterialTheme.typography.bodyMedium,

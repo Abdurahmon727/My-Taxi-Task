@@ -3,8 +3,10 @@ package com.example.mytaxitask.presentation.home
 import android.app.Activity
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -50,7 +52,6 @@ class HomePage(val viewModel: HomePageViewModel) : AppScreen {
             }
         })
 
-        //1. when the app get launched for the first time
         LaunchedEffect(true) {
             locationPermissions.launchMultiplePermissionRequest()
         }
@@ -64,6 +65,8 @@ class HomePage(val viewModel: HomePageViewModel) : AppScreen {
         val scaffoldState = rememberBottomSheetScaffoldState(sheetState)
 
         BottomSheetScaffold(
+            sheetContentColor = MaterialTheme.colorScheme.onBackground,
+            sheetContainerColor = MaterialTheme.colorScheme.background,
             scaffoldState = scaffoldState,
             sheetContent = {
                 HomeBottomSheetContent()

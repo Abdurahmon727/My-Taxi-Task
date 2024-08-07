@@ -14,18 +14,21 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.mytaxitask.core.constants.AppConstants
 import com.example.mytaxitask.core.extensions.Width
 import com.example.mytaxitask.domain.model.BottomSheetItemModel
-import com.example.mytaxitask.presentation.theme.shadowColor
 
 
 @Composable
@@ -36,29 +39,49 @@ fun HomeBottomSheetContent() {
         modifier = Modifier
             .padding(16.dp)
             .clip(RoundedCornerShape(12.dp))
-            .background(shadowColor),
+            .background(MaterialTheme.colorScheme.surface),
         contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
         itemsIndexed(items) { index, item ->
-            ItemUI(item = item, hasTopLine = index != 0)
+            ItemUI(
+                item = item,
+                hasTopLine = index != 0,
+                trailingColor = MaterialTheme.colorScheme.outlineVariant
+            )
         }
     }
 }
 
 @Composable
-private fun ItemUI(item: BottomSheetItemModel, hasTopLine: Boolean) {
+private fun ItemUI(item: BottomSheetItemModel, hasTopLine: Boolean, trailingColor: Color) {
     Column {
-        if (hasTopLine) HorizontalDivider()
+        if (hasTopLine) HorizontalDivider(color = trailingColor.copy())
         Row(
             modifier = Modifier.padding(vertical = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Image(painter = painterResource(id = item.iconRes), contentDescription = "")
+            Image(
+                painter = painterResource(id = item.iconRes), contentDescription = "",
+                colorFilter = ColorFilter.tint(trailingColor)
+            )
             8.Width()
-            Text(text = stringResource(id = item.titleRes))
+            Text(
+                text = stringResource(id = item.titleRes),
+                style = MaterialTheme.typography.bodyMedium
+            )
             Spacer(modifier = Modifier.weight(1f))
-            Text(text = item.trailingText)
-            Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "")
+            Text(
+                text = item.trailingText,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.W600,
+                    color = trailingColor,
+                )
+            )
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = "",
+                tint = trailingColor,
+            )
         }
     }
 }
