@@ -73,6 +73,7 @@ fun HomeTopBar(
                     .fillMaxSize()
                     .padding(5.dp)
                     .clip(RoundedCornerShape(10.dp)),
+                containerColor = MaterialTheme.colorScheme.background,
                 selectedTabIndex = selectedTabIndex,
                 indicator = indicator,
                 divider = {},
